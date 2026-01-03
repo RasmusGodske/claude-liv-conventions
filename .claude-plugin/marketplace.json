@@ -1,0 +1,14 @@
+{
+  "name": "claude-liv-conventions",
+  "owner": {
+    "name": "Rasmus Godske"
+  },
+  "plugins": [
+    {
+      "name": "liv-hooks",
+      "source": "./plugins/liv-hooks",
+      "description": "Pre-tool hooks that enforce Laravel/Inertia/Vue conventions and guide Claude towards project best practices",
+      "version": "1.0.0"
+    }
+  ]
+}

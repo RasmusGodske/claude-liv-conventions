@@ -1,0 +1,37 @@
+{
+  "name": "liv-hooks",
+  "description": "Pre-tool hooks that enforce Laravel/Inertia/Vue conventions. Blocks anti-patterns and guides Claude towards project best practices.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Rasmus Godske"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd ${CLAUDE_PLUGIN_ROOT}/hooks/FormRequestBlocker && uv run python main.py",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "cd ${CLAUDE_PLUGIN_ROOT}/hooks/VueScriptValidator && uv run python main.py",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd ${CLAUDE_PLUGIN_ROOT}/hooks/FormRequestBlocker && uv run python main.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

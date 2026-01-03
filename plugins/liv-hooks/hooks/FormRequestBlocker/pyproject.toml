@@ -1,0 +1,8 @@
+[project]
+name = "form-request-blocker"
+version = "1.0.0"
+description = "Pre-tool hook to block FormRequest usage and guide towards DataClasses"
+requires-python = ">=3.10"
+dependencies = [
+    "claude-hook-utils @ git+https://github.com/RasmusGodske/claude-hook-utils.git",
+]
