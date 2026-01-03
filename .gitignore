@@ -17,6 +17,9 @@ uv.lock
 *.swp
 *.swo
 
+# pytest
+.pytest_cache/
+
 # OS
 .DS_Store
 Thumbs.db
