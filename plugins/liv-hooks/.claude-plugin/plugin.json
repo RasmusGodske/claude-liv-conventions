@@ -19,6 +19,11 @@
             "type": "command",
             "command": "cd ${CLAUDE_PLUGIN_ROOT}/hooks/VueScriptValidator && uv run python main.py",
             "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "cd ${CLAUDE_PLUGIN_ROOT}/hooks/ControllerStructureValidator && uv run python main.py",
+            "timeout": 10
           }
         ]
       },
