@@ -50,6 +50,7 @@ from claude_hook_utils import (
 plugins/liv-hooks/hooks/{HookName}/
 ├── pyproject.toml
 ├── main.py
+├── README.md
 └── .venv/  (created by uv, gitignored)
 ```
 
@@ -215,20 +216,37 @@ Add hooks to `plugins/liv-hooks/.claude-plugin/plugin.json`:
 ### 2. VueScriptValidator
 **Purpose:** Ensures Vue files use `<script setup lang="ts">`
 **Detects:** Vue files without proper script setup
-**Uses:** Claude Agent SDK for nuanced validation
+**Speed:** Fast (pure regex)
 
 **Location:** `plugins/liv-hooks/hooks/VueScriptValidator/`
+
+### 3. ControllerStructureValidator
+**Purpose:** Enforces nested directory structure for controllers
+**Detects:** Controllers placed directly in `app/Http/Controllers/`
+**Speed:** Fast (pure regex)
+
+**Location:** `plugins/liv-hooks/hooks/ControllerStructureValidator/`
+
+### 4. E2EPathValidator
+**Purpose:** Validates E2E test paths match Laravel routes
+**Detects:** E2E test files that don't match actual routes
+**Uses:** Claude Agent SDK (runs `php artisan route:list`)
+**Speed:** Slow (120s timeout) - appropriate for complex validation
+
+**Location:** `plugins/liv-hooks/hooks/E2EPathValidator/`
 
 ## Creating a New Hook - Checklist
 
 1. [ ] Create directory: `plugins/liv-hooks/hooks/{HookName}/`
 2. [ ] Create `pyproject.toml` with `claude-hook-utils` dependency
 3. [ ] Create `main.py` with HookHandler subclass
-4. [ ] Run `uv sync` to install dependencies
-5. [ ] Test manually with echo JSON pipe
-6. [ ] Write tests in `tests/test_{hook_name}.py`
-7. [ ] Run `uv run pytest tests/test_{hook_name}.py -v`
-8. [ ] Add hook to `plugins/liv-hooks/.claude-plugin/plugin.json`
+4. [ ] Create `README.md` with description, examples, and configuration
+5. [ ] Run `uv sync` to install dependencies
+6. [ ] Test manually with echo JSON pipe
+7. [ ] Write tests in `tests/test_{hook_name}.py`
+8. [ ] Run `uv run pytest tests/test_{hook_name}.py -v`
+9. [ ] Add hook to `plugins/liv-hooks/.claude-plugin/plugin.json`
+10. [ ] Update `plugins/liv-hooks/README.md` with a summary of the new hook
 
 ## Testing Hooks
 

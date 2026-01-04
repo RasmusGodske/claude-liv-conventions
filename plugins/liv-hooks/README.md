@@ -35,6 +35,30 @@ Ensures Vue single-file components use the Composition API with TypeScript.
 - Missing `lang="ts"` attribute
 - Options API usage
 
+### ControllerStructureValidator
+
+**Triggers:** `Write`
+
+Enforces nested directory structure for Laravel controllers.
+
+**Blocks:**
+- Controllers placed directly in `app/Http/Controllers/`
+
+**Requires:**
+- Controllers in domain subdirectories like `app/Http/Controllers/Users/`
+
+### E2EPathValidator
+
+**Triggers:** `Write` | **Uses:** Claude Agent SDK
+
+Validates E2E test paths match actual Laravel routes.
+
+**Checks:**
+- Runs `php artisan route:list` to verify route exists
+- Compares test directory structure to route path
+
+**Note:** This hook uses Claude Agent SDK for complex validation and has a 120-second timeout.
+
 ## Adding a New Hook
 
 1. Create a new directory under `hooks/`:
@@ -42,7 +66,8 @@ Ensures Vue single-file components use the Composition API with TypeScript.
    hooks/
    └── MyNewHook/
        ├── pyproject.toml
-       └── main.py
+       ├── main.py
+       └── README.md
    ```
 
 2. Create `pyproject.toml`:
@@ -78,7 +103,26 @@ Ensures Vue single-file components use the Composition API with TypeScript.
        sys.exit(MyNewHook().run())
    ```
 
-4. Add hook to `plugin.json`:
+4. Create `README.md`:
+   ```markdown
+   # MyNewHook
+
+   Brief description of what this hook does.
+
+   ## What It Does
+
+   Explain the validation logic.
+
+   ## Why
+
+   Explain why this convention matters.
+
+   ## Examples
+
+   Show examples of blocked vs allowed patterns.
+   ```
+
+5. Add hook to `plugin.json`:
    ```json
    {
      "hooks": {
@@ -98,7 +142,9 @@ Ensures Vue single-file components use the Composition API with TypeScript.
    }
    ```
 
-5. Test locally before committing:
+6. Update this README with a summary of your hook (in the "Included Hooks" section)
+
+7. Test locally before committing:
    ```bash
    cd hooks/MyNewHook
    echo '{"hook_event_name":"PreToolUse","tool_name":"Write","tool_input":{"file_path":"test.php","content":"..."}}' | uv run python main.py
