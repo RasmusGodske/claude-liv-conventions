@@ -4,6 +4,6 @@ version = "1.0.0"
 description = "Pre-tool hook to validate E2E test paths match Laravel routes"
 requires-python = ">=3.10"
 dependencies = [
-    "claude-hook-utils>=0.2.0",
+    "claude-hook-utils>=0.2.3",
     "claude-agent-sdk>=0.1.0",
 ]

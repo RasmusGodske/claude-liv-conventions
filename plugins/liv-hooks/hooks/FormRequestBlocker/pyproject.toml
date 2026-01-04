@@ -4,5 +4,5 @@ version = "1.0.0"
 description = "Pre-tool hook to block FormRequest usage and guide towards DataClasses"
 requires-python = ">=3.10"
 dependencies = [
-    "claude-hook-utils>=0.2.0",
+    "claude-hook-utils>=0.2.3",
 ]
