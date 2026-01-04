@@ -8,7 +8,7 @@
       "name": "liv-hooks",
       "source": "./plugins/liv-hooks",
       "description": "Pre-tool hooks that enforce Laravel/Inertia/Vue conventions and guide Claude towards project best practices",
-      "version": "1.0.1"
+      "version": "1.0.2"
     }
   ]
 }
