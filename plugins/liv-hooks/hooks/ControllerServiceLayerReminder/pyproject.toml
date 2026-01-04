@@ -4,5 +4,5 @@ version = "1.0.0"
 description = "PostToolUse hook to remind Claude to use service classes for database mutations in controllers"
 requires-python = ">=3.10"
 dependencies = [
-    "claude-hook-utils>=0.2.3",
+    "claude-hook-utils>=0.3.0",
 ]

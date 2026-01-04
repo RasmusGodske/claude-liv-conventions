@@ -4,5 +4,5 @@ version = "1.0.0"
 description = "Pre-tool hook to enforce nested controller structure conventions"
 requires-python = ">=3.10"
 dependencies = [
-    "claude-hook-utils>=0.2.3",
+    "claude-hook-utils>=0.3.0",
 ]
