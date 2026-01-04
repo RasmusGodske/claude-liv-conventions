@@ -10,7 +10,6 @@ using dedicated service classes.
 This is a REMINDER, not a blocker. Claude can continue working.
 """
 
-import os
 import re
 import sys
 
@@ -20,6 +19,8 @@ from claude_hook_utils import (
     PostToolUseInput,
     PostToolUseResponse,
 )
+
+NAMESPACE = "claude-liv-conventions"
 
 
 class ControllerServiceLayerReminder(HookHandler):
@@ -55,10 +56,12 @@ Consider extracting database operations to a dedicated service class. This provi
 This is a reminder, not a requirement. Simple CRUD operations may not need a service."""
 
     def __init__(self) -> None:
-        log_file = os.environ.get("SERVICE_REMINDER_LOG")
-        logger = HookLogger(log_file=log_file) if log_file else None
-        super().__init__(logger=logger)
-        self._verbose = os.environ.get("SERVICE_REMINDER_VERBOSE", "").lower() in ("1", "true")
+        super().__init__(
+            logger=HookLogger.create_default(
+                "ControllerServiceLayerReminder",
+                namespace=NAMESPACE,
+            )
+        )
 
     def post_tool_use(self, input: PostToolUseInput) -> PostToolUseResponse | None:
         """Check controller after write and provide reminder if needed."""
@@ -154,9 +157,7 @@ This is a reminder, not a requirement. Simple CRUD operations may not need a ser
         return False
 
     def _log(self, message: str) -> None:
-        """Log a message if verbose mode is enabled."""
-        if self._verbose:
-            print(f"[ControllerServiceLayerReminder] {message}", file=sys.stderr)
+        """Log a message."""
         if self.logger:
             self.logger.info(message)
 

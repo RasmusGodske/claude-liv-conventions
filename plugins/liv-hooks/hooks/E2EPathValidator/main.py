@@ -31,6 +31,8 @@ from claude_hook_utils import (
     PreToolUseResponse,
 )
 
+NAMESPACE = "claude-liv-conventions"
+
 
 # Path to the prompt template (relative to this file)
 HOOK_DIR = Path(__file__).parent.resolve()
@@ -49,10 +51,12 @@ class E2EPathValidator(HookHandler):
     ]
 
     def __init__(self) -> None:
-        log_file = os.environ.get("E2E_VALIDATOR_LOG")
-        logger = HookLogger(log_file=log_file) if log_file else None
-        super().__init__(logger=logger)
-        self._verbose = os.environ.get("E2E_VALIDATOR_VERBOSE", "").lower() in ("1", "true")
+        super().__init__(
+            logger=HookLogger.create_default(
+                "E2EPathValidator",
+                namespace=NAMESPACE,
+            )
+        )
         self._template: str | None = None
 
     @property
@@ -165,9 +169,7 @@ class E2EPathValidator(HookHandler):
         return None
 
     def _log(self, message: str) -> None:
-        """Log a message if verbose mode is enabled."""
-        if self._verbose:
-            print(f"[E2EPathValidator] {message}", file=sys.stderr)
+        """Log a message."""
         if self.logger:
             self.logger.info(message)
 

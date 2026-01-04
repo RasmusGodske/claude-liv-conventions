@@ -20,6 +20,8 @@ claude-liv-conventions/
 │       │   ├── FormRequestBlocker/
 │       │   └── VueScriptValidator/
 │       └── README.md
+├── scripts/
+│   └── update-hooks.sh        # Update claude-hook-utils in all hooks
 ├── tests/                     # pytest tests for hooks
 ├── .claude/
 │   └── skills/
@@ -70,6 +72,12 @@ uv run pytest tests/test_form_request_blocker.py -v
 # Test a hook manually
 cd plugins/liv-hooks/hooks/FormRequestBlocker
 echo '{"hook_event_name":"PreToolUse","tool_name":"Bash","tool_input":{"command":"php artisan make:request Test"}}' | uv run python main.py
+
+# Update claude-hook-utils in all hooks
+./scripts/update-hooks.sh
+
+# Clean update (removes .venv for fresh install)
+./scripts/update-hooks.sh --clean
 ```
 
 ## Hook Architecture

@@ -6,7 +6,6 @@ This project uses spatie/laravel-data DataClasses instead of Laravel FormRequest
 for validation. This hook prevents Claude from creating FormRequests.
 """
 
-import os
 import re
 import sys
 
@@ -16,6 +15,8 @@ from claude_hook_utils import (
     PreToolUseInput,
     PreToolUseResponse,
 )
+
+NAMESPACE = "claude-liv-conventions"
 
 
 GUIDANCE_MESSAGE = """This project uses DataClasses (spatie/laravel-data) instead of FormRequests for validation.
@@ -53,9 +54,12 @@ class FormRequestBlocker(HookHandler):
     """Blocks FormRequest creation and guides towards DataClasses."""
 
     def __init__(self) -> None:
-        log_file = os.environ.get("FORM_REQUEST_BLOCKER_LOG")
-        logger = HookLogger(log_file=log_file) if log_file else None
-        super().__init__(logger=logger)
+        super().__init__(
+            logger=HookLogger.create_default(
+                "FormRequestBlocker",
+                namespace=NAMESPACE,
+            )
+        )
 
     def pre_tool_use(self, input: PreToolUseInput) -> PreToolUseResponse | None:
         """Check for FormRequest creation attempts."""

@@ -5,7 +5,6 @@ VueScriptValidator - Validates Vue files use <script setup lang="ts">.
 Uses fast regex matching to validate Vue file structure.
 """
 
-import os
 import re
 import sys
 
@@ -15,6 +14,8 @@ from claude_hook_utils import (
     PreToolUseInput,
     PreToolUseResponse,
 )
+
+NAMESPACE = "claude-liv-conventions"
 
 
 class VueScriptValidator(HookHandler):
@@ -35,10 +36,12 @@ Please update your script tag to include both `setup` and `lang="ts"`.
 """
 
     def __init__(self) -> None:
-        log_file = os.environ.get("VUE_VALIDATOR_LOG")
-        logger = HookLogger(log_file=log_file) if log_file else None
-        super().__init__(logger=logger)
-        self._verbose = os.environ.get("VUE_VALIDATOR_VERBOSE", "").lower() in ("1", "true")
+        super().__init__(
+            logger=HookLogger.create_default(
+                "VueScriptValidator",
+                namespace=NAMESPACE,
+            )
+        )
 
     def pre_tool_use(self, input: PreToolUseInput) -> PreToolUseResponse | None:
         """Validate Vue files before they are written."""
@@ -77,9 +80,7 @@ Please update your script tag to include both `setup` and `lang="ts"`.
         return bool(re.search(r'<script\b', content, re.IGNORECASE))
 
     def _log(self, message: str) -> None:
-        """Log a message if verbose mode is enabled."""
-        if self._verbose:
-            print(f"[VueScriptValidator] {message}", file=sys.stderr)
+        """Log a message."""
         if self.logger:
             self.logger.info(message)
 

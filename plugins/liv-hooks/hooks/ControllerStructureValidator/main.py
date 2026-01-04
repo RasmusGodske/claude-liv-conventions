@@ -6,7 +6,6 @@ This hook blocks controllers placed directly in app/Http/Controllers/ and guides
 developers to organize controllers in nested domain folders.
 """
 
-import os
 import re
 import sys
 
@@ -16,6 +15,8 @@ from claude_hook_utils import (
     PreToolUseInput,
     PreToolUseResponse,
 )
+
+NAMESPACE = "claude-liv-conventions"
 
 
 GUIDANCE_MESSAGE = """Controllers should be organized in nested domain folders, not placed directly in app/Http/Controllers/.
@@ -41,9 +42,12 @@ class ControllerStructureValidator(HookHandler):
     """Validates that controllers are placed in nested domain folders."""
 
     def __init__(self) -> None:
-        log_file = os.environ.get("CONTROLLER_STRUCTURE_VALIDATOR_LOG")
-        logger = HookLogger(log_file=log_file) if log_file else None
-        super().__init__(logger=logger)
+        super().__init__(
+            logger=HookLogger.create_default(
+                "ControllerStructureValidator",
+                namespace=NAMESPACE,
+            )
+        )
 
     def pre_tool_use(self, input: PreToolUseInput) -> PreToolUseResponse | None:
         """Check for controllers placed directly in app/Http/Controllers/."""
