@@ -4,7 +4,6 @@ This is a PostToolUse hook that provides reminders (additionalContext)
 rather than blocking. Tests verify the detection logic.
 """
 
-import pytest
 from tests.utils import run_hook
 
 
