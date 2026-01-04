@@ -1,7 +1,7 @@
 {
   "name": "liv-hooks",
   "description": "Pre-tool hooks that enforce Laravel/Inertia/Vue conventions. Blocks anti-patterns and guides Claude towards project best practices.",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "author": {
     "name": "Rasmus Godske"
   },
