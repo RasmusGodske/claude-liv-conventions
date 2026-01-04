@@ -84,8 +84,49 @@ Claude invokes tool → Hook receives JSON via stdin → Validates → Returns d
 - **Deny:** `PreToolUseResponse.deny("reason with guidance")`
 - **Ask:** `PreToolUseResponse.ask("question for user")`
 
-### Key Principle
+### Key Principles
+
+**1. Actionable Guidance**
 When denying, always provide **actionable guidance** - explain WHY it's blocked and HOW to do it correctly.
+
+**2. Performance First - Hooks Must Be Fast**
+
+⚠️ **Hooks run on EVERY tool call.** A slow hook makes Claude feel sluggish for the user.
+
+| Approach | Speed | Use When |
+|----------|-------|----------|
+| Pure Python (regex, string ops) | ✅ Fast (~ms) | Always prefer this |
+| File system operations | ⚠️ Moderate | Only if necessary |
+| External HTTP requests | ❌ Slow | Avoid if possible |
+| Claude Agent SDK calls | ❌ Very slow | Only for complex analysis that can't be done with code |
+
+**Guidelines:**
+- **Prefer pure code:** If you can validate with regex, string matching, or AST parsing - do that
+- **Avoid external calls:** Don't call Claude/LLMs unless absolutely necessary (e.g., reviewing code quality)
+- **Fail fast:** Return early when conditions don't match
+- **Set reasonable timeouts:** Use 10-30s timeouts, not minutes
+
+```python
+# ✅ GOOD - Fast regex check
+def pre_tool_use(self, input: PreToolUseInput) -> PreToolUseResponse | None:
+    if not input.file_path_matches("**/*.php"):
+        return None  # Fast exit
+
+    if re.search(r"class \w+ extends FormRequest", input.content):
+        return PreToolUseResponse.deny("Use DataClasses instead")
+    return None
+
+# ❌ BAD - Slow LLM call for simple validation
+def pre_tool_use(self, input: PreToolUseInput) -> PreToolUseResponse | None:
+    # Don't do this for simple pattern matching!
+    result = await query("Is this a FormRequest class?", content=input.content)
+    ...
+```
+
+**When LLM calls ARE appropriate:**
+- Code review hooks that need to understand intent/quality
+- Complex analysis that can't be expressed as patterns
+- Hooks that run infrequently (e.g., only on specific file types)
 
 ## Testing Hooks
 
@@ -151,6 +192,52 @@ After creating a hook, register it in `plugins/liv-hooks/.claude-plugin/plugin.j
 
 - **Tests:** Run on every PR via GitHub Actions
 - **Manual testing:** Use echo pipe method shown above
+
+## Plugin Troubleshooting
+
+### "No plugins installed" but marketplace shows plugins
+
+**Symptom:**
+- `/plugin` Installed tab shows "No plugins installed"
+- `/hooks` shows "No matchers configured yet"
+- But `~/.claude/plugins/installed_plugins.json` shows the plugin IS registered
+
+**Root Cause:**
+Claude Code UI reads from `installed_plugins_v2.json` but sometimes only `installed_plugins.json` exists. This is a known bug (GitHub issues #9426, #13509).
+
+**Quick Fix:**
+```bash
+cp ~/.claude/plugins/installed_plugins.json ~/.claude/plugins/installed_plugins_v2.json
+```
+Then restart Claude Code.
+
+**Clean Reinstall Fix:**
+```bash
+# Remove plugin cache and registry
+rm -rf ~/.claude/plugins/cache/claude-liv-conventions
+rm ~/.claude/plugins/installed_plugins.json
+rm ~/.claude/plugins/installed_plugins_v2.json
+
+# Restart Claude Code, then:
+/plugin install liv-hooks@claude-liv-conventions --scope project
+```
+
+### Debugging Plugin Issues
+
+1. Check registry: `cat ~/.claude/plugins/installed_plugins.json`
+2. Check cache exists: `ls ~/.claude/plugins/cache/`
+3. Check plugin.json: `cat ~/.claude/plugins/cache/<marketplace>/<plugin>/<version>/.claude-plugin/plugin.json`
+4. Run with debug: `claude --debug`
+
+### Key Plugin Files
+
+| File | Purpose |
+|------|---------|
+| `~/.claude/plugins/installed_plugins.json` | Plugin registry (old format) |
+| `~/.claude/plugins/installed_plugins_v2.json` | Plugin registry (UI reads this) |
+| `~/.claude/plugins/known_marketplaces.json` | Configured marketplaces |
+| `~/.claude/plugins/cache/` | Downloaded plugin files |
+| `<project>/.claude/settings.json` | Project-level `enabledPlugins` |
 
 ## Questions?
 

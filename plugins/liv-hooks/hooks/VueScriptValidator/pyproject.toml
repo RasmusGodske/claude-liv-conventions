@@ -4,6 +4,5 @@ version = "1.0.0"
 description = "Pre-tool hook to validate Vue files use <script setup lang='ts'>"
 requires-python = ">=3.10"
 dependencies = [
-    "claude-agent-sdk>=0.1.0",
     "claude-hook-utils @ git+https://github.com/RasmusGodske/claude-hook-utils.git",
 ]
