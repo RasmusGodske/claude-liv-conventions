@@ -33,7 +33,7 @@ class UserController extends Controller
             },
         })
         assert result is not None
-        assert "systemMessage" in result.get("hookSpecificOutput", {})
+        assert "additionalContext" in result.get("hookSpecificOutput", {})
 
     def test_detects_model_create_in_store_method(self):
         """Should detect Model::create() in store method."""
@@ -55,7 +55,7 @@ class OrderController extends Controller
             },
         })
         assert result is not None
-        assert "systemMessage" in result.get("hookSpecificOutput", {})
+        assert "additionalContext" in result.get("hookSpecificOutput", {})
 
     def test_detects_update_in_update_method(self):
         """Should detect $variable->update() in update method."""
@@ -77,7 +77,7 @@ class ProductController extends Controller
             },
         })
         assert result is not None
-        assert "systemMessage" in result.get("hookSpecificOutput", {})
+        assert "additionalContext" in result.get("hookSpecificOutput", {})
 
     def test_detects_delete_in_destroy_method(self):
         """Should detect $variable->delete() in destroy method."""
@@ -99,7 +99,7 @@ class PostController extends Controller
             },
         })
         assert result is not None
-        assert "systemMessage" in result.get("hookSpecificOutput", {})
+        assert "additionalContext" in result.get("hookSpecificOutput", {})
 
 
 class TestControllerServiceLayerReminderIgnores:
