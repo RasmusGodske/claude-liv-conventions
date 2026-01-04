@@ -42,6 +42,18 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd ${CLAUDE_PLUGIN_ROOT}/hooks/ControllerServiceLayerReminder && uv run python main.py",
+            "timeout": 10
+          }
+        ]
+      }
     ]
   }
 }

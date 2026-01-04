@@ -59,6 +59,18 @@ Validates E2E test paths match actual Laravel routes.
 
 **Note:** This hook uses Claude Agent SDK for complex validation and has a 120-second timeout.
 
+### ControllerServiceLayerReminder
+
+**Triggers:** `Write` (PostToolUse) | **Type:** Reminder (non-blocking)
+
+Reminds Claude to use dedicated service classes for database mutations in controllers.
+
+**Detects in store/update/destroy methods:**
+- `$variable->save()`, `$variable->update()`, `$variable->delete()`
+- `Model::create()`, `Model::updateOrCreate()`, etc.
+
+**Note:** This is a PostToolUse hook - it provides guidance AFTER the write, not blocking.
+
 ## Adding a New Hook
 
 1. Create a new directory under `hooks/`:
