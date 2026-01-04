@@ -24,6 +24,11 @@
             "type": "command",
             "command": "cd ${CLAUDE_PLUGIN_ROOT}/hooks/ControllerStructureValidator && uv run python main.py",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "cd ${CLAUDE_PLUGIN_ROOT}/hooks/E2EPathValidator && uv run python main.py",
+            "timeout": 120
           }
         ]
       },

@@ -1,0 +1,9 @@
+[project]
+name = "e2e-path-validator"
+version = "1.0.0"
+description = "Pre-tool hook to validate E2E test paths match Laravel routes"
+requires-python = ">=3.10"
+dependencies = [
+    "claude-hook-utils @ git+https://github.com/RasmusGodske/claude-hook-utils.git",
+    "claude-agent-sdk>=0.1.0",
+]

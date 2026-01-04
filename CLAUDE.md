@@ -187,6 +187,8 @@ After creating a hook, register it in `plugins/liv-hooks/.claude-plugin/plugin.j
 |------|--------|----------------|
 | `FormRequestBlocker` | Laravel FormRequest classes | spatie/laravel-data DataClasses |
 | `VueScriptValidator` | Vue files without proper setup | `<script setup lang="ts">` |
+| `ControllerStructureValidator` | Flat controller file structure | Nested domain folders |
+| `E2EPathValidator` | E2E test paths that don't match routes | Correct path structure (uses Claude Agent SDK) |
 
 ## CI/CD
 
